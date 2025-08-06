@@ -8,7 +8,7 @@ Prerequisites
 
 Clone the repo and add the following file to the directory before building the docker:
 
-raw2ometiff .zip file - https://github.com/glencoesoftware/raw2ometiff/releases
+raw2ometiff.zip file - https://github.com/glencoesoftware/raw2ometiff/releases
 
 
 Building the docker
