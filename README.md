@@ -6,13 +6,10 @@ A docker container for converting Philips iSyntax files into the ome.tiff format
 Prerequisites
 =============
 
-Clone the repo and add the following files to the directory before building the docker:
-
-isyntax2raw .whl file - https://github.com/glencoesoftware/isyntax2raw/releases
+Clone the repo and add the following file to the directory before building the docker:
 
 raw2ometiff .zip file - https://github.com/glencoesoftware/raw2ometiff/releases
 
-PhilipsSDK - https://www.openpathology.philips.com/
 
 Building the docker
 ===================
