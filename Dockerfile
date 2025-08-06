@@ -1,5 +1,5 @@
 FROM ubuntu:18.04
-ENV LANG C.UTF-8
+ENV LANG=C.UTF-8
 RUN apt-get update && apt-get install -y \
     curl \
     gcc \
@@ -13,25 +13,31 @@ RUN apt-get update && apt-get install -y \
     libtinyxml2.6.2v5 \
     python3 \
     python3-setuptools \
+    python3-pip \
     unzip \
     python3-dev \
     openjdk-11-jdk-headless \
-    g++
-RUN curl https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py
-RUN python3 /tmp/get-pip.py
-COPY philips-pathologysdk-*.zip /tmp
+    g++ 
+
+RUN curl -sS  https://bootstrap.pypa.io/pip/3.6/get-pip.py | python3
+
+# Your SDK + tools
+COPY philips-pathologysdk.zip /tmp
 COPY convert.sh /opt
 RUN chmod +x /opt/convert.sh
 RUN unzip /tmp/philips*.zip -d /tmp
-RUN dpkg -i /tmp/philips-pathologysdk-*/pathologysdk-modules/philips-pathologysdk-pixelengine*.deb
-RUN dpkg -i /tmp/philips-pathologysdk-*/pathologysdk-modules/philips-pathologysdk-softwarerenderer*.deb
-RUN dpkg -i /tmp/philips-pathologysdk-*/pathologysdk-python36-modules/philips-pathologysdk-python3-pixelengine*.deb
-RUN dpkg -i /tmp/philips-pathologysdk-*/pathologysdk-python36-modules/philips-pathologysdk-python3-softwarerendercontext*.deb
-RUN dpkg -i /tmp/philips-pathologysdk-*/pathologysdk-python36-modules/philips-pathologysdk-python3-softwarerenderbackend*.deb
+
+# Core SDK
+RUN dpkg -i /tmp/pathologysdk-modules/philips-pathologysdk-pixelengine*.deb && \
+    dpkg -i /tmp/pathologysdk-modules/philips-pathologysdk-softwarerenderer*.deb
+
+# Python 3.8–specific bindings
+RUN dpkg -i /tmp/pathologysdk-python36-modules/philips-pathologysdk-python3-pixelengine*.deb && \
+    dpkg -i /tmp/pathologysdk-python36-modules/philips-pathologysdk-python3-softwarerendercontext*.deb && \
+    dpkg -i /tmp/pathologysdk-python36-modules/philips-pathologysdk-python3-softwarerenderbackend*.deb
+
 RUN rm -rf /tmp/philips*
-COPY isyntax2raw*.whl /tmp
-RUN pip install /tmp/isyntax2raw*.whl
-RUN rm -rf /tmp/isyntax2raw*
+RUN pip install --no-cache-dir isyntax2raw
 COPY raw2ometiff*.zip /tmp
 RUN unzip /tmp/raw2ometiff*.zip -d /opt
 RUN rm -rf /tmp/raw2ometiff*
